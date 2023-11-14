@@ -33,10 +33,11 @@ almacen
 Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server de prueba para consumir la data de movimientos de mercancía de un almacén de alimentos:
 
 1) Instalaremos y configuraremos el ambiente BAS, para crear nuestro proyecto usando SAP Fiori, siguiendo estos pasos:
-   Configuracion:
+
+   Configuracion de BAS:
     https://github.com/SAP-samples/teched2022-AD280/blob/main/exercises/ex2/ex2.1/README.md
    
-   Creacion de proyecto:
+   Creacion de proyecto en BAS:
     https://github.com/SAP-samples/teched2022-AD280/blob/main/exercises/ex2/ex2.2-alternative/README.md
    
 
@@ -100,11 +101,11 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
 
    Codigo para crear el modelo en el manifest.json:
 ```
-   "movalmacen": {
-        "type": "sap.ui.model.json.JSONModel",
-        "uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
-	}
- ```
+"movalmacen": {
+	"type": "sap.ui.model.json.JSONModel",
+	"uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
+}
+```
 2.1) al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
          "v1/almacen", mientras que el resto de la url la podemos obtener al crear el mockserver.
 
@@ -117,31 +118,25 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
 
     3.2) En el controlador, debes remplazar todo el codigo de tu archivo (excepto el string "almacen.almacen.controller.View1")
   	 con lo siguiente:
-        /////////////////////////////////////////////////////////////////
+        ```
               	sap.ui.define([
                     './Formatter',
-                	"sap/ui/core/mvc/Controller"
+                    "sap/ui/core/mvc/Controller"
                 ], function(Formatter, Controller) {
                 	"use strict";
-                
                 	return Controller.extend("almacen.almacen.controller.View1", {
                         onInit : function (evt) {
-                
-                            // set explored app's demo model on this sample
                             var oModel = this.getView().getModel("movalmacen");
                             this.getView().setModel(oModel);
-                    
                         },
-                        
                 		handleItemClick: function(oEvent) {
                 			var demoToast = this.getView().byId("demoToast");
                 			demoToast.setText("Has dado click.");
                 			demoToast.show();
                 		}
-                
                 	});
                 });
-        ///////////////////////////////////////////////////////////////
+        ```
 
    NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
 
@@ -149,7 +144,7 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
     manifest.json (no copies y pegues, tampoco reemplaces, es solo agregar o cambiar los campos que ya existan y sean diferentes!)
 
 4) Crea el archivo controller/Formatter.js, que sera el encargado de contener la logica js para mostrar los iconos y colores segun sea el caso de un salida o entrada de mercancia. Una vez creado, pega en el el siguiente codigo:
-////////////////////////////////////////////////////////////////////
+```
    sap.ui.define(function() {
     	"use strict";
     	var Formatter = {
@@ -173,10 +168,10 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
     	};
     	return Formatter;
     }, /* bExport= */ true);
-////////////////////////////////////////////////////////////////////
+```
 
 5) Solo falta dar forma a la vista, llamar nuestra data del mockserver en ella y llamar a nuestras funciones de formato en el archivo "Formatter.js" creado anteriormente. Para eso, reemplaza el codigo de tu vista con el siguiente codigo (excepto la linea de la propiedad "controllerName"):
-   ////////////////////////////////////////////////////////////////////
+   ```
     <mvc:View controllerName="almacen.almacen.controller.View1"
         xmlns="sap.ui.webc.main"
     	xmlns:mvc="sap.ui.core.mvc"
@@ -211,4 +206,4 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
     		/>
     	</List>
     </mvc:View>
-   ////////////////////////////////////////////////////////////////////
+   ```
