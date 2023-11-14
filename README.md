@@ -35,14 +35,16 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
 1) Instalaremos y configuraremos el ambiente BAS, para crear nuestro proyecto usando SAP Fiori, siguiendo estos pasos:
    Configuracion:
     https://github.com/SAP-samples/teched2022-AD280/blob/main/exercises/ex2/ex2.1/README.md
+   
    Creacion de proyecto:
     https://github.com/SAP-samples/teched2022-AD280/blob/main/exercises/ex2/ex2.2-alternative/README.md
    
 
-2)	Crearemos el Mock server en la plataforma de postman, siguiendo el siguiente tutorial:             
+3)	Crearemos el Mock server en la plataforma de postman, siguiendo el siguiente tutorial:             
    https://drive.google.com/file/d/1o4acXKL1HyqtwM2C4elX0neC9F8y6Lrs/view?usp=drive_link
 
    Objeto JSON para la data del ejercicio:
+   ```
    [
         {
           "responsable": "Luis",
@@ -94,14 +96,16 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
           "tipo": "entrada"
         }
     ]
+```
 
    Codigo para crear el modelo en el manifest.json:
+```
    "movalmacen": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
 	}
- 
-    2.1) al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
+ ```
+2.1) al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
          "v1/almacen", mientras que el resto de la url la podemos obtener al crear el mockserver.
 
 3)	Una vez creados el proyecto y el MockServer, agregaremos nuestra plantilla DemoKit a nuestro proyecto. Es la siguiente:
