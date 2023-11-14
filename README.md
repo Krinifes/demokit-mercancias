@@ -122,7 +122,7 @@ NOTA: al final de la url, los segmentos que observamos deben ser los mismo que c
 
   	3.2) En el controlador, debes remplazar todo el codigo de tu archivo (excepto el string "almacen.almacen.controller.View1")
   	 con lo siguiente:
-        ```
+```
               	sap.ui.define([
                     './Formatter',
                     "sap/ui/core/mvc/Controller"
@@ -140,11 +140,11 @@ NOTA: al final de la url, los segmentos que observamos deben ser los mismo que c
                 		}
                 	});
                 });
-        ```
+```
 
-	NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
+NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
 		
-	3.3) En el archivo manifest.json, debemos agregar con cuidado las propiedades que sean diferentes, o esten faltando en nuestro propio
+3.3) En el archivo manifest.json, debemos agregar con cuidado las propiedades que sean diferentes, o esten faltando en nuestro propio
     manifest.json (no copies y pegues, tampoco reemplaces, es solo agregar o cambiar los campos que ya existan y sean diferentes!)
 
 
