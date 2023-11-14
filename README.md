@@ -29,7 +29,7 @@ almacen
     npm start
 ```
 
-#### Documentación Ejercicio plantilla DemoKit
+## Documentación Ejercicio plantilla DemoKit
 Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server de prueba para consumir la data de movimientos de mercancía de un almacén de alimentos:
 
 1) Instalaremos y configuraremos el ambiente BAS, para crear nuestro proyecto usando SAP Fiori, siguiendo estos pasos:
