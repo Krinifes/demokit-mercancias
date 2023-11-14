@@ -1,0 +1,35 @@
+<mvc:View controllerName="almacen.almacen.controller.View1"
+    xmlns="sap.ui.webc.main"
+	xmlns:mvc="sap.ui.core.mvc"
+	height="50%">
+	<Toast id="demoToast" duration="1000" />
+	<Title level="H3"
+		id="title"
+		text="Movimientos de mercancia"
+		class="sapUiTinyMargin"
+		wrappingType="Normal"/>
+	<List 
+	itemClick="handleItemClick" 
+	id="lista" 
+	items="{movalmacen>/}">
+	
+		<StandardListItem
+			id="item"
+			text="{movalmacen>producto} / Responsable: {movalmacen>responsable}"
+			icon="{
+					parts: [
+						{path: 'movalmacen>tipo'}
+					],
+					formatter: 'almacen.almacen.controller.Formatter.tipoico'
+				}"
+			description="Cantidad: {movalmacen>cantidad} / {movalmacen>Fecha}"
+			additionalText="{movalmacen>tipo}"
+			additionalTextState="{
+							parts: [
+								{path: 'movalmacen>tipo'}
+							],
+							formatter: 'almacen.almacen.controller.Formatter.tipomovi'
+						}" 
+		/>
+	</List>
+</mvc:View>
