@@ -41,7 +41,7 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
     https://github.com/SAP-samples/teched2022-AD280/blob/main/exercises/ex2/ex2.2-alternative/README.md
    
 
-3)	Crearemos el Mock server en la plataforma de postman, siguiendo el siguiente tutorial:             
+2)	Crearemos el Mock server en la plataforma de postman, siguiendo el siguiente tutorial:             
    https://drive.google.com/file/d/1o4acXKL1HyqtwM2C4elX0neC9F8y6Lrs/view?usp=drive_link
 
    Objeto JSON para la data del ejercicio:
@@ -106,17 +106,21 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
 	"uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
 }
 ```
-2.1) al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
+NOTA: al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
          "v1/almacen", mientras que el resto de la url la podemos obtener al crear el mockserver.
+
 
 3)	Una vez creados el proyecto y el MockServer, agregaremos nuestra plantilla DemoKit a nuestro proyecto. Es la siguiente:
     https://sapui5.hana.ondemand.com/#/entity/sap.ui.webc.main.List/sample/sap.ui.webc.main.sample.ListBasic/code
 
     Necesitaremos el codigo de los archivos view.xml, controller.js y manifest.json que alli se indican:
+
+
   	3.1) En la View, remplazar todo el codigo de nuestro archivo view/View1.view.xml con el de la plantilla excepto la linea que indica la     
      propiedad "controllerName", que es la que une a nuestra vista con nuestro controlador.
 
-    3.2) En el controlador, debes remplazar todo el codigo de tu archivo (excepto el string "almacen.almacen.controller.View1")
+
+  	3.2) En el controlador, debes remplazar todo el codigo de tu archivo (excepto el string "almacen.almacen.controller.View1")
   	 con lo siguiente:
         ```
               	sap.ui.define([
@@ -138,10 +142,11 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
                 });
         ```
 
-   NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
-
-   3.3) En el archivo manifest.json, debemos agregar con cuidado las propiedades que sean diferentes, o esten faltando en nuestro propio
+	NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
+		
+	3.3) En el archivo manifest.json, debemos agregar con cuidado las propiedades que sean diferentes, o esten faltando en nuestro propio
     manifest.json (no copies y pegues, tampoco reemplaces, es solo agregar o cambiar los campos que ya existan y sean diferentes!)
+
 
 4) Crea el archivo controller/Formatter.js, que sera el encargado de contener la logica js para mostrar los iconos y colores segun sea el caso de un salida o entrada de mercancia. Una vez creado, pega en el el siguiente codigo:
 ```
