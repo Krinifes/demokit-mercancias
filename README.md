@@ -99,19 +99,153 @@ Pasos para la creación de una plantilla DemoKit en BAS, usando un Mock server d
     ]
 ```
 
+Objeto JSON numero 2 para la data del grafico mensual:
+   ```
+   {
+"Products": [
+{
+"Mes": "Enero",
+"Pastas": 350,
+"Pollos": 900,
+"Huevos": 80,
+"Harinas": 570,
+"Chuletas": 1200,
+"Granos": 430,
+"Cereales": 750
+
+},
+{
+"Mes": "Febrero",
+"Pastas": 450,
+"Pollos": 200,
+"Huevos": 10,
+"Harinas": 650,
+"Chuletas": 940,
+"Granos": 690,
+"Cereales": 520
+},
+{
+"Mes": "Marzo",
+"Pastas": 200,
+"Pollos": 0,
+"Huevos": 0,
+"Harinas": 1000,
+"Chuletas": 780,
+"Granos": 700,
+"Cereales": 260
+},
+{
+"Mes": "Abril",
+"Pastas": 30,
+"Pollos": 1100,
+"Huevos": 0,
+"Harinas": 670,
+"Chuletas": 600,
+"Granos": 510,
+"Cereales": 0
+},
+{
+"Mes": "Mayo",
+"Pastas": 0,
+"Pollos": 480,
+"Huevos": 2000,
+"Harinas": 158,
+"Chuletas": 430,
+"Granos": 1300,
+"Cereales": 0
+},
+{
+"Mes": "Junio",
+"Pastas": 0,
+"Pollos": 10,
+"Huevos": 1400,
+"Harinas": 2000,
+"Chuletas": 250,
+"Granos": 860,
+"Cereales": 1600
+},
+{
+"Mes": "Julio",
+"Pastas": 900,
+"Pollos": 1500,
+"Huevos": 900,
+"Harinas": 1270,
+"Chuletas": 90,
+"Granos": 400,
+"Cereales": 1510
+},
+{
+"Mes": "Agosto",
+"Pastas": 410,
+"Pollos": 740,
+"Huevos": 350,
+"Harinas": 960,
+"Chuletas": 380,
+"Granos": 70,
+"Cereales": 1245
+},
+{
+"Mes": "Septiembre",
+"Pastas": 600,
+"Pollos": 130,
+"Huevos": 0,
+"Harinas": 110,
+"Chuletas": 110,
+"Granos": 0,
+"Cereales": 820
+},
+{
+"Mes": "Octubre",
+"Pastas": 230,
+"Pollos": 0,
+"Huevos": 0,
+"Harinas": 510,
+"Chuletas": 100,
+"Granos": 1500,
+"Cereales": 400
+},
+{
+"Mes": "Noviembre",
+"Pastas": 40,
+"Pollos": 0,
+"Huevos": 1500,
+"Harinas": 30,
+"Chuletas": 200,
+"Granos": 1150,
+"Cereales": 148
+},
+{
+"Mes": "Diciembre",
+"Pastas": 0,
+"Pollos": 600,
+"Huevos": 700,
+"Harinas": 0,
+"Chuletas": 200,
+"Granos": 560,
+"Cereales": 450
+}
+]
+}
+```
+
    Codigo para crear el modelo en el manifest.json:
 ```
 "movalmacen": {
 	"type": "sap.ui.model.json.JSONModel",
 	"uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
+},
+"movalmacenchart": {
+"type": "sap.ui.model.json.JSONModel",
+"uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacenchart"
 }
 ```
 NOTA: al final de la url, los segmentos que observamos deben ser los mismo que colocamos al crear nuestro mosck server, en este caso
          "v1/almacen", mientras que el resto de la url la podemos obtener al crear el mockserver.
 
 
-3)	Una vez creados el proyecto y el MockServer, agregaremos nuestra plantilla DemoKit a nuestro proyecto. Es la siguiente:
+3)	Una vez creados el proyecto y el MockServer, agregaremos nuestras plantillas DemoKit a nuestro proyecto. son las siguiente:
     https://sapui5.hana.ondemand.com/#/entity/sap.ui.webc.main.List/sample/sap.ui.webc.main.sample.ListBasic/code
+    https://sapui5.hana.ondemand.com/#/entity/sap.suite.ui.commons.ChartContainer/sample/sap.suite.ui.commons.sample.ChartContainerSimpleToolbar/code
 
     Necesitaremos el codigo de los archivos view.xml, controller.js y manifest.json que alli se indican:
 
@@ -124,22 +258,144 @@ NOTA: al final de la url, los segmentos que observamos deben ser los mismo que c
   	 con lo siguiente:
 ```
               	sap.ui.define([
-                    './Formatter',
-                    "sap/ui/core/mvc/Controller"
-                ], function(Formatter, Controller) {
-                	"use strict";
-                	return Controller.extend("almacen.almacen.controller.View1", {
-                        onInit : function (evt) {
-                            var oModel = this.getView().getModel("movalmacen");
-                            this.getView().setModel(oModel);
-                        },
-                		handleItemClick: function(oEvent) {
-                			var demoToast = this.getView().byId("demoToast");
-                			demoToast.setText("Has dado click.");
-                			demoToast.show();
-                		}
-                	});
-                });
+		    './Formatter',
+			"sap/ui/core/mvc/Controller",
+			"sap/ui/core/routing/History", 
+						'sap/ui/model/json/JSONModel', 
+						'sap/viz/ui5/data/FlattenedDataset', 
+						'sap/viz/ui5/controls/common/feeds/FeedItem', 
+						'sap/m/Label',
+						'sap/m/ColumnListItem', 
+						'sap/m/library', 
+						'sap/m/MessageToast', 
+						'sap/m/Column' 
+		], function(Formatter, Controller) {
+			"use strict";
+		
+			return Controller.extend("almacen.almacen.controller.View1", {
+		        _constants: {
+					sampleName: "almacen/almacen/controller", //"sap/suite/ui/commons/sample/ChartContainerSimpleToolbar",
+					vizFrame: {
+						id: "chartContainerVizFrame",
+						dataset: {
+							dimensions: [{
+								name: 'Mes',
+								value: "{Mes}"
+							}],
+							measures: [{
+								group: 1,
+								name: "Pastas",
+								value: "{Pastas}"
+							}, {
+								group: 1,
+								name: "Pollos",
+								value: "{Pollos}"
+							}, {
+								group: 1,
+								name: "Harinas",
+								value: "{Harinas}"
+							}, {
+								group: 1,
+								name: "Chuletas",
+								value: "{Chuletas}"
+							}, {
+								group: 1,
+								name: "Huevos",
+								value: "{Huevos}"
+							}, {
+								group: 1,
+								name: "Cereales",
+								value: "{Cereales}"
+							}, {
+								group: 1,
+								name: "Granos",
+								value: "{Granos}"
+							},],
+							data: {
+								path: "/Products"
+							}
+						},
+						modulePath: "movalmacenchart",
+						type: "line",
+						properties: {
+							plotArea: {
+								showGap: true
+							}
+						},
+						feedItems: [{
+							'uid': "primaryValues",
+							'type': "Measure",
+							'values': ["Pastas", "Pollos", "Chuletas", "Huevos", "Harinas", "Cereales", "Granos"]
+						}, {
+							'uid': "axisLabels",
+							'type': "Dimension",
+							'values': ["Mes"]
+						}]
+					}
+				},
+		        
+		        onInit : function (evt) {
+		
+		            // set explored app's demo model on this sample
+		            var oModel = this.getView().getModel("movalmacen");
+		            this.getView().setModel(oModel);
+		
+		            var oVizFrame = this.getView().byId(this._constants.vizFrame.id); 
+					this._updateVizFrame(oVizFrame);
+		    
+		        },
+		        
+		        /* ============================================================ */
+				/* Helper Methods                                               */
+				/* ============================================================ */
+				/**
+				 * Updated the Viz Frame in the view.
+				 *
+				 * @private
+				 * @param {sap.viz.ui5.controls.VizFrame} vizFrame Viz Frame that needs to be updated
+				 */
+				_updateVizFrame: function(vizFrame) {
+					var oVizFrame = this._constants.vizFrame;
+					var oVizFramePath = sap.ui.require.toUrl(this._constants.sampleName + oVizFrame.modulePath);
+					var oModel = this.getOwnerComponent().getModel("movalmacenchart");
+					console.log("LUIS TRAVIESO0");
+					//var oModel = new JSONModel(oVizFramePath);
+					var oDataset = new sap.viz.ui5.data.FlattenedDataset(oVizFrame.dataset);
+					console.log("LUIS TRAVIESO1");
+					vizFrame.setVizProperties(oVizFrame.properties);
+					console.log("LUIS TRAVIESO2");
+					vizFrame.setDataset(oDataset);
+					console.log("LUIS TRAVIESO3");
+					vizFrame.setModel(oModel);
+					console.log("LUIS TRAVIESO4");
+					this._addFeedItems(vizFrame, oVizFrame.feedItems);
+					console.log("LUIS TRAVIESO5");
+					vizFrame.setVizType(oVizFrame.type);
+				},
+		
+				/**
+				 * Adds the passed feed items to the passed Viz Frame.
+				 *
+				 * @private
+				 * @param {sap.viz.ui5.controls.VizFrame} vizFrame Viz Frame to add feed items to
+				 * @param {Object[]} feedItems Feed items to add
+				 */
+				_addFeedItems: function(vizFrame, feedItems) {
+					console.log("LUIS TRAVIESO feedItems " + feedItems);
+					for (var i = 0; i < feedItems.length; i++) {
+						console.log("LUIS TRAVIESO FOR " + i);
+						vizFrame.addFeed(new sap.viz.ui5.controls.common.feeds.FeedItem(feedItems[i]));
+					}
+				},
+		
+				handleItemClick: function(oEvent) {
+					var demoToast = this.getView().byId("demoToast");
+					demoToast.setText("Has dado click.");
+					demoToast.show();
+				}
+		
+			});
+		});
 ```
 
 NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y ruta de tu archivo vista. En el codigo original del controlador, al crear el proyecto, lo puedes encontrar. Copialo antes de remplaar todo el controlador y luego pegalo alli, remplazando "almacen.almacen.controller.View1".
@@ -178,37 +434,81 @@ NOTA: En el string "almacen.almacen.controller.View1" debes colocar el nombre y 
 5) Solo falta dar forma a la vista, llamar nuestra data del mockserver en ella y llamar a nuestras funciones de formato en el archivo "Formatter.js" creado anteriormente. Para eso, reemplaza el codigo de tu vista con el siguiente codigo (excepto la linea de la propiedad "controllerName"):
    ```
     <mvc:View controllerName="almacen.almacen.controller.View1"
-        xmlns="sap.ui.webc.main"
-    	xmlns:mvc="sap.ui.core.mvc"
-    	height="50%">
-    	<Toast id="demoToast" duration="1000" />
-    	<Title level="H3"
-    		id="title"
-    		text="Movimientos de mercancia"
-    		class="sapUiTinyMargin"
-    		wrappingType="Normal"/>
-    	<List 
-    	itemClick="handleItemClick" 
-    	id="lista" 
-    	items="{movalmacen>/}">
-    		<StandardListItem
-    			id="item"
-    			text="{movalmacen>producto} / Responsable: {movalmacen>responsable}"
-    			icon="{
-    					parts: [
-    						{path: 'movalmacen>tipo'}
-    					],
-    					formatter: 'almacen.almacen.controller.Formatter.tipoico'
-    				}"
-    			description="Cantidad: {movalmacen>cantidad} / {movalmacen>Fecha}"
-    			additionalText="{movalmacen>tipo}"
-    			additionalTextState="{
-    							parts: [
-    								{path: 'movalmacen>tipo'}
-    							],
-    							formatter: 'almacen.almacen.controller.Formatter.tipomovi'
-    						}" 
-    		/>
-    	</List>
-    </mvc:View>
+	        xmlns="sap.m"
+		xmlns:commons="sap.suite.ui.commons"
+		xmlns:main="sap.ui.webc.main"
+		xmlns:mvc="sap.ui.core.mvc"
+		xmlns:viz="sap.viz.ui5.controls"
+		xmlns:layout="sap.ui.layout"
+		height="50%">
+		<main:Toast id="demoToast" duration="1000" />
+		<Title level="H3"
+			id="title"
+			text="Movimientos de mercancia"
+			class="sapUiTinyMargin"
+			wrappingType="Normal"/>
+		
+		<IconTabBar
+			id="idIconTabBarMulti"
+			expanded="{device>/isNoPhone}"
+			class="sapUiResponsiveContentPadding">
+			<items>
+				<IconTabFilter id="IconTabFilter1" icon="sap-icon://hint" key="info">
+					<main:List 
+					itemClick="handleItemClick" 
+					id="lista" 
+					items="{movalmacen>/}">
+					
+						<main:StandardListItem
+							id="item"
+							text="{movalmacen>producto} / Responsable: {movalmacen>responsable}"
+							icon="{
+									parts: [
+										{path: 'movalmacen>tipo'}
+									],
+									formatter: 'almacen.almacen.controller.Formatter.tipoico'
+								}"
+							description="Cantidad: {movalmacen>cantidad} / {movalmacen>Fecha}"
+							additionalText="{movalmacen>tipo}"
+							additionalTextState="{
+											parts: [
+												{path: 'movalmacen>tipo'}
+											],
+											formatter: 'almacen.almacen.controller.Formatter.tipomovi'
+										}" 
+						/>
+					</main:List>
+				</IconTabFilter>
+				<IconTabFilter
+					id="IconTabFilter2"
+					icon="sap-icon://attachment"
+					key="attachments">
+					<layout:Splitter id="ly" width="100%" height="100%">
+						<layout:contentAreas>
+							<commons:ChartContainer
+								id="chartContainer"
+								showFullScreen="true"
+								showPersonalization="false"
+								autoAdjustHeight="false"
+								personalizationPress="attachPersonalizationPress"
+								contentChange="attachContentChange"
+								title="Balance total de productos mensual">
+								<commons:content>
+									<commons:ChartContainerContent
+										id="ChartContainerContent"
+										icon="sap-icon://line-chart"
+										title="Balance total de productos mensual">
+										<commons:content>
+											<viz:VizFrame id="chartContainerVizFrame" height="500px" width="100%"
+														uiConfig="{applicationSet:'fiori'}"></viz:VizFrame>
+										</commons:content>
+									</commons:ChartContainerContent>
+								</commons:content>
+							</commons:ChartContainer>
+						</layout:contentAreas>
+					</layout:Splitter>
+				</IconTabFilter>
+			</items>
+		</IconTabBar>
+	</mvc:View>
    ```
