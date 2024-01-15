@@ -107,6 +107,10 @@
       "movalmacen": {
         "type": "sap.ui.model.json.JSONModel",
         "uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacen"
+			},
+      "movalmacenchart": {
+        "type": "sap.ui.model.json.JSONModel",
+        "uri": "https://0f53f119-1e36-442c-89b3-860c487036a5.mock.pstmn.io/v1/almacenchart"
 			}
     },
     "resources": {
